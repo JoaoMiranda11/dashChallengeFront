@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --pink: #d564d2;
-  --purple: #2f1d7d;
-  --darkPurple: #2f1d7d;
+  --primary: #2f1d7d;
+  --secondary: #d564d2;
+  --tertiary: #2f1d7d;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;

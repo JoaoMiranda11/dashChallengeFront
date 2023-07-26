@@ -30,7 +30,7 @@ export default function Login() {
                     <TextInput control={control} name="username" label="Username" required regex={/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/} />
                     <TextInput control={control} name="password" label="Password" hide required />
                     <div className="flex items-center justify-center">
-                        <Button type="submit" disabled={loading}>
+                        <Button type="submit" loading={loading}>
                             Sign In
                         </Button>
                     </div>

@@ -1,0 +1,40 @@
+.loader {
+    min-width: 20px;
+    min-height: 20px;
+}
+
+@keyframes animate-stroke {
+    0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+        stroke: var(--primary);
+    }
+    50% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -35;
+        stroke: var(--primary);
+    }
+    100% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -124;
+        stroke: var(--primary);
+    }
+}
+
+.path {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 3px;
+    stroke-linecap: round;
+    animation: animate-stroke 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.circle {
+    animation: rotate 2s linear infinite;
+}
