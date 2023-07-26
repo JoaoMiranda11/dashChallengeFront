@@ -1,0 +1,35 @@
+.modalBg {
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    position: absolute;
+    z-index: 2;
+}
+
+.modal {
+    border-radius: 0.3rem;
+    background-color: white;
+    color: var(--darkGray);
+}
+
+.bodyContainer {
+    padding: 12px;
+}
+
+.headerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 4px 4px 12px;
+    gap: 8px;
+    font-size: larger;
+    font-weight: 600;
+    border-bottom: 1px solid var(--gray);
+}

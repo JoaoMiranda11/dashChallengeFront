@@ -3,9 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --primary: #2f1d7d;
+  --primary: #1f2c35;
   --secondary: #d564d2;
   --tertiary: #2f1d7d;
+  --darkPink: #452432;
+  --darkGray:#323639;
+  --strongGray: #525659;
+  --gray: #8a8aaa;
+  --lightGray: #d0d0da;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -28,3 +33,26 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: #888; 
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+/* END SCROLLBAR */

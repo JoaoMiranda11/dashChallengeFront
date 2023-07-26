@@ -19,11 +19,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-screen`}>
+      <body className={`${inter.className}`}>
         <ReduxProvider>
           {children}
           <ToastContainer position="bottom-right" />
         </ReduxProvider>
+        <div id="portal" />
       </body>
     </html>
   )

@@ -2,33 +2,80 @@
 
 import { Row } from "./rows";
 import { TableProps } from "./types"
+import style from './style.module.css'
+import { memo, useCallback, useMemo, useState } from "react";
+import { TableButton } from "./buttons";
+import { toast } from "react-toastify";
 
-export function Table({columns, data=[]}:TableProps) {
+export const Table = memo(function TableComponent({columns, data=[], setData, minWidth, minHeight, maxHeight, maxRows=0}:TableProps) {
+    const [page, setPage] = useState(0);
+    const pagesNumber = useMemo(() => {
+        if (!maxRows) return [];
+        return Array.from(Array(Math.ceil(data.length / maxRows)), (_, index) => index + 1)
+    }, [data.length, maxRows])
+    const pageRows = useMemo(() => {
+        if (!maxRows) return data;
+        return data.slice(page * maxRows, page + 1 * maxRows )
+    }, [data, maxRows, page])
+
+    const RemoveRow = useCallback((index: number) => {
+        if (data.length <= index) {
+            toast.error("Não foi possível encontrar o item a ser excluído!")
+            return;
+        }
+        data.splice(index, 1)
+        setData([...data])
+    }, [data, setData])
+
     return (
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400" >
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400" >
-                <tr>
+        <div className={style.tableContainer} style={{minWidth, minHeight, maxHeight}}>
+            <table className={style.tableArea} >
+                <thead >
+                    <tr>
+                        {
+                            Object.keys(columns).map((key, index) => {
+                                const column = columns[key];
+                                return (
+                                    <th scope="col" key={`${column.name}-${index}`} style={{textAlign: column.position}}>
+                                        {column.name}
+                                    </th>
+                                )
+                            })
+                        }
+                    </tr>
+                </thead>
+                <tbody>
                     {
-                        Object.keys(columns).map((key, index) => {
-                            const column = columns[key];
+                        pageRows.map((row, index) => {
                             return (
-                                <th scope="col" className="px-6 py-3" key={`${column.name}-${index}`}>
-                                    {column.name}
-                                </th>
+                                <Row row={row} columns={columns} key={`${index}-${page}-${columns["id"]}`} index={index + (page * maxRows)} removeRow={RemoveRow} />
                             )
                         })
                     }
-                </tr>
-            </thead>
-            <tbody>
-                {
-                    data.map((row, index) => {
-                        return (
-                            <Row row={row} columns={columns} key={index} />
-                        )
-                    })
-                }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+            {
+                pageRows.length === 0 && (
+                    <p className={style.notFoundData}>
+                        Nenhum dado encontrado!
+                    </p>
+                )
+            }
+            {
+                (maxRows && maxRows < data.length ) && (
+                    <div className={style.paginationBox}>
+                        {
+                            pagesNumber.map((p) => {
+                                return (
+                                    <TableButton key={p} onClick={() => {setPage(p - 1)}} selected={(p - 1) == page} >
+                                        {p}
+                                    </TableButton>
+                                )
+                            })
+                        }
+                    </div>
+                )
+            }
+        </div>
     )
-}
+})

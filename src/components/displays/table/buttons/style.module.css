@@ -1,0 +1,28 @@
+.tableButton {
+    border: 1px solid var(--lightGray);
+    border-radius: 0.3rem;
+    padding: 4px;
+    min-width: 32px;
+    height: 32px;
+    transition: all 0.2s ease-in-out;
+}
+
+.tableButton:hover {
+    background-color: var(--strongGray);
+}
+
+.selected {
+    background-color: var(--gray);    
+    color: var(--darkGray);  
+}
+
+.selected:hover {
+    background-color: var(--gray);    
+    color: var(--darkGray);  
+}
+
+.buttonArea {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}

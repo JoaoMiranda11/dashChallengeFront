@@ -1,0 +1,72 @@
+.tableContainer {
+    border-radius: 0.3rem;
+    overflow-x: auto;
+    background-color: var(--primary);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.tableArea {
+    display: table;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0px;
+    overflow-y: auto;
+}
+
+/* head */
+
+.tableArea thead {
+    display: table-header-group;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    text-align: left;
+    text-transform: uppercase;
+    color: var(--lightGray);
+    background-color: var(--primary);
+    position: sticky;
+    top: 0px;
+}
+
+.tableArea thead tr th {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+
+/* body */
+
+.tableArea tbody {
+    display: table-header-group;
+    background-color: var(--primary);
+    transition: all 1s ease-in-out;
+    min-height: 300px;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+/* pagination */
+
+.paginationBox {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 10px;
+    gap: 10px;
+    background-color: var(--primary);
+    position: sticky;
+    bottom: 0px;
+}
+
+/* utils */
+
+.notFoundData {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+}
