@@ -10,6 +10,7 @@ export type TableDataObject = Record<string, TableDataTypes> & {id: string | num
 
 export type ColumnsProps = {
     name: string;
+    hideOnMobile?: boolean;
     placeholder?: ReactNode;
     contentMask?: (props: {
         row: TableDataObject;

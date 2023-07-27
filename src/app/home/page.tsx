@@ -88,19 +88,22 @@ export default function Home() {
     "name": {
       name: "Nome",
       style: {
-        width: 200,
+        width: 100,
+        maxWidth: 300,
       }
     },
     "age": {
       name: "Idade",
+      hideOnMobile: true,
       style: {
         width: 100,
       }
     },
     "email": {
       name: "Email",
+      hideOnMobile: true,
       style: {
-        width: 200,
+        width: 100,
         maxWidth: 200,
       }
     },
@@ -113,7 +116,7 @@ export default function Home() {
     "actions": {
       name: "Ações",
       style: {
-        minWidth: 200,
+        minWidth: 100,
         textAlign: "center",
       },
       contentMask({row, actions, index}) {
@@ -158,7 +161,7 @@ export default function Home() {
         <Button onClick={()=>createModalRef.current?.switchVisibility(true)} >
           Criar
         </Button>
-        <Table ref={tableRef} columns={columns} style={{minWidth: 620, minHeight: 432, maxHeight: 432}} maxRows={6} />
+        <Table ref={tableRef} columns={columns} style={{minWidth: 360, minHeight: 432, maxHeight: 432}} maxRows={6} />
       </div>
       <EditModal modalRef={editModalRef} changeRow={(index, data) => tableRef.current?.changeRow(index, data) } />
       <CreateModal addRow={(data) => tableRef.current?.addRow(data)} modalRef={createModalRef} />

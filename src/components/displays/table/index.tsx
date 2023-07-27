@@ -75,12 +75,12 @@ export const Table = forwardRef<TableFunctions, TableProps>(function TableCompon
         <div className={styles.tableContainer} style={style}>
             <table className={styles.tableArea} >
                 <thead >
-                    <tr>
+                    <tr >
                         {
                             Object.keys(columns).map((key, index) => {
                                 const column = columns[key];
                                 return (
-                                    <th scope="col" key={`${column.name}-${index}`} style={{textAlign: column.style?.textAlign}}>
+                                    <th className={`${column.hideOnMobile ? "hideMobile" : ""}`} scope="col" key={`${column.name}-${index}`} style={{textAlign: column.style?.textAlign}}>
                                         {column.name}
                                     </th>
                                 )

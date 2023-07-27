@@ -33,7 +33,7 @@ export const Row = memo(function RowComponent({row, columns, newRowAnimate, inde
                     const data: TableDataTypes = row[key];
                     const style = column.style;
                     return (
-                        <td key={`${columnIndex}-${index}-${row["id"]}`} 
+                        <td className={`${column.hideOnMobile ? "hideMobile" : ""}`} key={`${columnIndex}-${index}-${row["id"]}`} 
                             onClick={() => column.action?.(row)}
                             style={style} >
                             {column.defaultValue || column.contentMask?.({row, actions, index, pageIndex}) || data || column.placeholder}
