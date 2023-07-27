@@ -1,29 +1,31 @@
 "use client"
 
 import { ModalFunctions } from "@/components/displays/modal";
-import { Table } from "@/components/displays/table"
+import { Table, TableFunctions } from "@/components/displays/table"
 import { TableButton, TableRowButtonArea } from "@/components/displays/table/buttons";
 import type { ColumnsProps, TableDataObject } from "@/components/displays/table/types"
 import Image from "next/image";
-import { useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import style from './style.module.css'
 import { EditModal } from "./components/editModal";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useQueryParams } from "@/hooks/queryParams";
+import { CreateModal } from "./components/createModal";
+import { Button } from "@/components/inputs/button";
+import { UserData } from "./types";
 
 const tableData: TableDataObject[] = [
-  {
-    name: "Miranda",
-    age: 42,
-    email: "admin@a.com",
-    avatar: "admin",
-    id: 0
-  },
   {
     name: "João",
     age: 24,
     email: "jsm2.pe@gmail.com",
     avatar: "joaoMiranda",
+    id: 0
+  },
+  {
+    name: "Miranda",
+    age: 42,
+    email: "admin@a.com",
+    avatar: "admin",
     id: 1
   },
   {
@@ -63,10 +65,10 @@ const tableData: TableDataObject[] = [
   },
   {
     name: "Miranda",
-    age: 47,
+    age: 48,
     email: "admin@a.com",
     avatar: "admin",
-    id: 7
+    id: 8
   },
   {
     name: "Miranda",
@@ -78,33 +80,43 @@ const tableData: TableDataObject[] = [
 ]
 
 export default function Home() {
-  const { addQueryParams } = useQueryParams();
-  const [data, setData] = useState(tableData);
-  const editModalRef = useRef<ModalFunctions>(null);
+  const tableRef = useRef<TableFunctions>(null)
+  const editModalRef = useRef<ModalFunctions<UserData & {index: number}>>(null);
+  const createModalRef = useRef<ModalFunctions<UserData>>(null);
 
   const columns: Record<string, ColumnsProps> = {
     "name": {
       name: "Nome",
-      width: 200,
+      style: {
+        width: 200,
+      }
     },
     "age": {
       name: "Idade",
-      width: 100,
+      style: {
+        width: 100,
+      }
     },
     "email": {
       name: "Email",
-      width: 200,
-      maxWidth: 200,
+      style: {
+        width: 200,
+        maxWidth: 200,
+      }
     },
     "avatar": {
       name: "Avatar",
-      maxWidth: 100,
+      style: {
+        maxWidth: 100,
+      }
     },
     "actions": {
       name: "Ações",
-      minWidth: 200,
-      position: "center",
-      contentMask(content, actions) {
+      style: {
+        minWidth: 200,
+        textAlign: "center",
+      },
+      contentMask({row, actions, index}) {
         return (
           <TableRowButtonArea>
             <TableButton onClick={() => {
@@ -116,10 +128,10 @@ export default function Home() {
               />
             </TableButton>
             <TableButton onClick={() => {
-              addQueryParams("id", `${content.id}`)
+              editModalRef.current?.setModalData({...row as UserData, index} )
               editModalRef.current?.switchVisibility()
             }}>
-            <Image src="icons/edit.svg" width={20} height={20}
+              <Image src="icons/edit.svg" width={20} height={20}
                 alt="edit"
               />
             </TableButton>
@@ -136,10 +148,20 @@ export default function Home() {
     }
   }
 
+  useEffect(() => {
+    tableRef.current?.setTableData(tableData)
+  }, [])
+
   return (
-    <div className={style.page} >
-      <EditModal modalRef={editModalRef} />
-      <Table columns={columns} data={data} setData={setData} minWidth={620} minHeight={432} maxHeight={432} maxRows={6} />
-    </div>
+    <>
+      <div className={style.page} >
+        <Button onClick={()=>createModalRef.current?.switchVisibility(true)} >
+          Criar
+        </Button>
+        <Table ref={tableRef} columns={columns} style={{minWidth: 620, minHeight: 432, maxHeight: 432}} maxRows={6} />
+      </div>
+      <EditModal modalRef={editModalRef} changeRow={(index, data) => tableRef.current?.changeRow(index, data) } />
+      <CreateModal addRow={(data) => tableRef.current?.addRow(data)} modalRef={createModalRef} />
+    </>
   )
 }

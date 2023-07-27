@@ -11,7 +11,19 @@
 
     to {
         opacity: 0;
-        transform: translateX(-120%);
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0%);
     }
 }
 
@@ -35,6 +47,10 @@
     text-overflow: ellipsis;
 }
 
+.slideInRow {
+    animation: 0.5s slideIn linear;
+}
+
 .loadingRow {
     background: linear-gradient(45deg,var(--darkPink),var(--darkGray),var(--darkPink));
     background-size: 200% 100%;
@@ -45,7 +61,7 @@
 }
 
 .removingRow {
-    animation: 0.4s slideOut linear normal;
+    animation: 0.5s slideOut linear normal;
     color: var(--gray);
     pointer-events: none;
 }

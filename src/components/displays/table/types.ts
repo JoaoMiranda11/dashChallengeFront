@@ -11,21 +11,38 @@ export type TableDataObject = Record<string, TableDataTypes> & {id: string | num
 export type ColumnsProps = {
     name: string;
     placeholder?: ReactNode;
-    contentMask?: (content: TableDataObject, actions: Actions) => ReactNode;
+    contentMask?: (props: {
+        row: TableDataObject;
+        actions: {
+            handleSwitchLoading: (newState?: boolean) => void;
+            handleRemove: () => Promise<void>;
+        };
+        pageIndex: number;
+        index: number;
+    }) => ReactNode;
     action?: (content: TableDataObject) => void;
     defaultValue?: ReactNode;
-    width?: string | number;
-    minWidth?: string | number;
-    maxWidth?: string | number;
-    position?: "center" | "start" | "end";
+    style?: {
+        height?: string | number;
+        minHeight?: string | number;
+        maxHeight?: string | number;
+        width?: string | number;
+        minWidth?: string | number;
+        maxWidth?: string | number;
+        textAlign?: "center" | "start" | "end";
+    }
 }
 
 export type TableProps = {
     columns: Record<string, ColumnsProps>;
-    data: TableDataObject[];
-    setData: Dispatch<SetStateAction<TableDataObject[]>>
-    minWidth?: string | number;
-    minHeight?:  string | number;
-    maxHeight?: string | number;
     maxRows?: number;
+    style?: {
+        height?: string | number;
+        minHeight?: string | number;
+        maxHeight?: string | number;
+        width?: string | number;
+        minWidth?: string | number;
+        maxWidth?: string | number;
+        textAlign?: "center" | "start" | "end";
+    }
 }

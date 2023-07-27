@@ -1,13 +1,13 @@
 "use client"
 
 import { TableDataTypes } from "../types";
-import style from './style.module.css'
-import {memo, useState} from 'react'
+import styles from './style.module.css'
+import { memo, useState} from 'react'
 import type { RowComponentProps } from "./types";
 
-const REMOVE_ANIMATION_DELAY = 350;
+const REMOVE_ANIMATION_DELAY = 450;
 
-export const Row = memo(function RowComponent({row, columns, index, removeRow}:RowComponentProps) {
+export const Row = memo(function RowComponent({row, columns, newRowAnimate, index, pageIndex, removeRow, addRow}:RowComponentProps) {
     const [loading, setLoading] = useState(false);
     const [removing, setRemoving] = useState(false);
 
@@ -26,16 +26,17 @@ export const Row = memo(function RowComponent({row, columns, index, removeRow}:R
     const actions = {handleSwitchLoading, handleRemove};
 
     return (
-        <tr className={`${style.tableRow} ${loading ? style.loadingRow : ""} ${removing ? style.removingRow : ""}`} >
+        <tr className={`${styles.tableRow} ${newRowAnimate && styles.slideInRow} ${loading ? styles.loadingRow : ""} ${removing ? styles.removingRow : ""}`} >
             {
                 Object.keys(columns).map((key: string, columnIndex: number) => {
                     const column = columns[key];
                     const data: TableDataTypes = row[key];
+                    const style = column.style;
                     return (
-                        <td key={`${columnIndex}-${index}`} 
+                        <td key={`${columnIndex}-${index}-${row["id"]}`} 
                             onClick={() => column.action?.(row)}
-                            style={{maxWidth: column.maxWidth, minWidth: column.minWidth, width: column.width, textAlign: column.position}} >
-                            {column.defaultValue || column.contentMask?.(row, actions) || data || column.placeholder}
+                            style={style} >
+                            {column.defaultValue || column.contentMask?.({row, actions, index, pageIndex}) || data || column.placeholder}
                         </td>
                     )   
                 })

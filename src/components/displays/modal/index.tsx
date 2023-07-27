@@ -1,17 +1,32 @@
 "use client"
 
-import { useRef, useEffect, useState, ReactNode, forwardRef, useImperativeHandle, useCallback } from 'react'
+import { useRef, useEffect, useState, useContext, forwardRef, useImperativeHandle, useCallback, createContext } from 'react'
 import { createPortal } from 'react-dom'
 import styles from "./style.module.css"
 import Image from 'next/image'
 import { ModalProps } from './types'
 
-export type ModalFunctions = {
-    switchVisibility: (newState?: boolean) => void;
+export type ModalFunctions<T> = {
+  switchVisibility: (newState?: boolean) => void;
+  setModalData: (data?: T) => void;
+  getModalData: () => T;
 }
 
-export const Modal = forwardRef<ModalFunctions, ModalProps>(function ModalRef(props, ref) {
-  const divRef = useRef<Element | null>(null)
+export type ModalContextFunctions<T> = {
+  switchVisibility: (newState?: boolean) => void;
+  setModalData: (data?: T) => void;
+  data: T | null;
+}
+
+const ModalContext = createContext<ModalContextFunctions<any>>({
+  data: null,
+  setModalData: (newState?: boolean | undefined) => {},
+  switchVisibility: () => {}
+});
+
+export const Modal = forwardRef<ModalFunctions<any>, ModalProps>(function ModalRef(props, ref) {
+  const divRef = useRef<Element | null>(null);
+  const [data, setData] = useState<any>(null);
   const [visible, setVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -23,6 +38,12 @@ export const Modal = forwardRef<ModalFunctions, ModalProps>(function ModalRef(pr
     props.onClose?.()
     switchVisibility(false)
   }, [props, switchVisibility])
+
+  const setModalData = useCallback((data: any) => {
+    setData(data);
+  }, [])
+
+  const getModalData = useCallback(() => data, [data])
   
   useEffect(() => {
     divRef.current = document.querySelector<HTMLElement>("#portal")
@@ -31,9 +52,11 @@ export const Modal = forwardRef<ModalFunctions, ModalProps>(function ModalRef(pr
 
   useImperativeHandle(ref, () => {
     return {
-        switchVisibility
+        switchVisibility,
+        setModalData,
+        getModalData
     };
-  }, [switchVisibility]);
+  }, [getModalData, setModalData, switchVisibility]);
 
   const ModalComponent = (
     <div className={styles.modalBg}>
@@ -45,7 +68,9 @@ export const Modal = forwardRef<ModalFunctions, ModalProps>(function ModalRef(pr
           <Image onClick={closeFunc} style={{cursor: "pointer"}} width={30} height={30} src={"icons/close.svg"} alt="x" />
         </div>
         <div className={styles.bodyContainer} >
-          {props.children}
+          <ModalContext.Provider value={{data, switchVisibility, setModalData}}>
+            {props.children}
+          </ModalContext.Provider>
         </div>
       </div>
     </div>
@@ -53,3 +78,11 @@ export const Modal = forwardRef<ModalFunctions, ModalProps>(function ModalRef(pr
 
   return (mounted && divRef.current && visible) ? createPortal(ModalComponent, divRef.current) : null
 })
+
+export function useModalContext<T>() {
+  const context = useContext(ModalContext);
+  if (!context) {
+    throw new Error('ModalContext must be used within a ModalProvider');
+  }
+  return context as ModalContextFunctions<T>;
+};
