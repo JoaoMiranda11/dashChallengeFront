@@ -3,5 +3,5 @@ export type UserData = {
     age: number,
     email: string,
     avatar: string,
-    id: number
+    _id: number
 }

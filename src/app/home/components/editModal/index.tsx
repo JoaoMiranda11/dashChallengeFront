@@ -7,17 +7,25 @@ import { TextInput } from "@/components/inputs/controlledTextInput";
 import { Button } from "@/components/inputs/button";
 import { UserData } from "../../types";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 function EditForm({changeRow}:{changeRow: (index: number, data: any) => void}) {
-    const { control, handleSubmit } = useForm<UserData & { index: number; }>();
+    const { control, handleSubmit } = useForm<UserData>();
     const { data, switchVisibility } = useModalContext<UserData & { index: number; }>()
 
-    const submit = useCallback((formData: UserData & { index: number; }) => {
+    const submit = useCallback(async (formData: UserData) => {
         if (data !== null && data?.index !== undefined) {
-            changeRow(data.index, formData);
+            const res = await axios.patch(process.env.NEXT_PUBLIC_BACKEND_URL+"/users", {...formData, id: data._id});
+            if (!res?.data){
+                toast.error("Não foi possível criar usuário!");
+                console.error(res)
+                return;
+            }
+
+            changeRow(data.index, res.data);
             switchVisibility(false)
         } else {
-            toast.error("Houve algum erro ao encontrar dados do usuário!")
+            toast.error("Houve algum erro ao alterar dados do usuário!")
         }
     }, [data, changeRow, switchVisibility])
 

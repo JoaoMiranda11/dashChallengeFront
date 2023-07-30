@@ -8,78 +8,15 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import style from './style.module.css'
 import { EditModal } from "./components/editModal";
-import { useQueryParams } from "@/hooks/queryParams";
 import { CreateModal } from "./components/createModal";
 import { Button } from "@/components/inputs/button";
 import { UserData } from "./types";
-
-const tableData: TableDataObject[] = [
-  {
-    name: "João",
-    age: 24,
-    email: "jsm2.pe@gmail.com",
-    avatar: "joaoMiranda",
-    id: 0
-  },
-  {
-    name: "Miranda",
-    age: 42,
-    email: "admin@a.com",
-    avatar: "admin",
-    id: 1
-  },
-  {
-    name: "Miranda",
-    age: 43,
-    email: "admin@a.com",
-    avatar: "admin",
-    id: 2
-  },
-  {
-    name: "Miranda",
-    age: 44,
-    email: "admin@a.com",
-    avatar: "admin",
-    id: 3
-  },
-  {
-    name: "Miranda",
-    age: 45,
-    email: "admin@a.com",
-    avatar: "admin",
-    id: 4
-  },
-  {
-    name: "Miranda",
-    age: 46,
-    email: "admin@a.com",
-    avatar: "admin",
-    id: 5
-  },
-  {
-    name: "Miranda",
-    age: 47,
-    email: "admin@a.com",
-    avatar: "admin",
-    id: 6
-  },
-  {
-    name: "Miranda",
-    age: 48,
-    email: "admin@a.com",
-    avatar: "admin",
-    id: 8
-  },
-  {
-    name: "Miranda",
-    age: 49,
-    email: "admin@a.com",
-    avatar: "admin",
-    id: 9
-  }
-]
+import axios from "axios";
+import { deleteUser } from "@/services/deleteUser";
+import { toast } from "react-toastify";
 
 export default function Home() {
+  const [loading, setLoading] = useState(true);
   const tableRef = useRef<TableFunctions>(null)
   const editModalRef = useRef<ModalFunctions<UserData & {index: number}>>(null);
   const createModalRef = useRef<ModalFunctions<UserData>>(null);
@@ -131,15 +68,27 @@ export default function Home() {
               />
             </TableButton>
             <TableButton onClick={() => {
-              editModalRef.current?.setModalData({...row as UserData, index} )
+              editModalRef.current?.setModalData({...row as unknown as UserData, index} )
               editModalRef.current?.switchVisibility()
             }}>
               <Image src="icons/edit.svg" width={20} height={20}
                 alt="edit"
               />
             </TableButton>
-            <TableButton onClick={() => {
-              actions.handleRemove()
+            <TableButton onClick={async () => {
+              if (!row._id) {
+                toast.error("Usuário não encontrado!")
+                return;
+              }
+              actions.handleSwitchLoading(true);
+              const result = await deleteUser(`${row._id}`)
+              if (result) {
+                actions.handleSwitchLoading(false);
+                actions.handleRemove();
+              }else{
+                toast.error("Não foi possível deletar o usuário!")
+                actions.handleSwitchLoading(false);
+              }
             }}>
               <Image src="icons/trash.svg" width={20} height={20}
                 alt="delete"
@@ -152,7 +101,13 @@ export default function Home() {
   }
 
   useEffect(() => {
-    tableRef.current?.setTableData(tableData)
+    (async () => {
+      const res = await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+"/users");
+      if (res?.data && Array.isArray(res.data)) {
+        tableRef.current?.setTableData(res.data);
+      }
+      setLoading(false);
+    })()
   }, [])
 
   return (
@@ -161,7 +116,7 @@ export default function Home() {
         <Button onClick={()=>createModalRef.current?.switchVisibility(true)} >
           Criar
         </Button>
-        <Table ref={tableRef} columns={columns} style={{minWidth: 360, minHeight: 432, maxHeight: 432}} maxRows={6} />
+        <Table ref={tableRef} loading={loading} columns={columns} style={{minWidth: 360, minHeight: 432, maxHeight: 432}} maxRows={6} />
       </div>
       <EditModal modalRef={editModalRef} changeRow={(index, data) => tableRef.current?.changeRow(index, data) } />
       <CreateModal addRow={(data) => tableRef.current?.addRow(data)} modalRef={createModalRef} />

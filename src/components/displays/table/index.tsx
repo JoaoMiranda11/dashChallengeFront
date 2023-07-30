@@ -16,7 +16,7 @@ export type TableFunctions = {
     changeRow: (index: number, tableData: TableDataObject) => void;
 }
 
-export const Table = forwardRef<TableFunctions, TableProps>(function TableComponent({columns, style, maxRows=0}, tableRef) {
+export const Table = forwardRef<TableFunctions, TableProps>(function TableComponent({columns, loading, style, maxRows=0}, tableRef) {
     const [data, setData] = useState<TableDataObject[]>([]);
     const [page, setPage] = useState(0);
     const [newRowAnimation, setNewRowAnimation] = useState(false);
@@ -90,16 +90,21 @@ export const Table = forwardRef<TableFunctions, TableProps>(function TableCompon
                 </thead>
                 <tbody>
                     {
-                        pageRows.map((row, pageIndex) => {
+                        !loading && pageRows.map((row, pageIndex) => {
                             const index = pageIndex + (page * maxRows);
                             return (
-                                <Row row={row} newRowAnimate={newRowAnimation && index == 0} columns={columns} key={`${index}-${page}-${columns["id"]}`} index={index} pageIndex={pageIndex} removeRow={removeRow} addRow={addRow} />
+                                <Row row={row} newRowAnimate={newRowAnimation && index == 0} columns={columns} key={`${index}-${page}}`} index={index} pageIndex={pageIndex} removeRow={removeRow} addRow={addRow} />
                             )
                         })
                     }
                 </tbody>
             </table>
             {
+                loading ? 
+                <p className={styles.notFoundData}>
+                    Carregando...
+                </p>
+                :
                 pageRows.length === 0 && (
                     <p className={styles.notFoundData}>
                         Nenhum dado encontrado!
@@ -107,7 +112,7 @@ export const Table = forwardRef<TableFunctions, TableProps>(function TableCompon
                 )
             }
             {
-                (maxRows && maxRows < data.length ) && (
+                (!loading && maxRows && maxRows < data.length ) && (
                     <div className={styles.paginationBox}>
                         {
                             pagesNumber.map((p) => {

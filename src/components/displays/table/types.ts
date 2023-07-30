@@ -37,6 +37,7 @@ export type ColumnsProps = {
 export type TableProps = {
     columns: Record<string, ColumnsProps>;
     maxRows?: number;
+    loading?: boolean;
     style?: {
         height?: string | number;
         minHeight?: string | number;
