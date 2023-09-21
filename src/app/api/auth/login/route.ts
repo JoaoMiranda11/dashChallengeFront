@@ -25,7 +25,6 @@ export async function POST(req: NextRequest) {
     response.cookies.set({
       name: authCookieName,
       value: token,
-      path: "/",
     });
 
     return response;

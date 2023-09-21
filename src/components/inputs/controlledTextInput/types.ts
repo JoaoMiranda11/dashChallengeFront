@@ -9,7 +9,7 @@ export type TextInputProps = {
     defaultValue?: string;
     required?: boolean;
     status?: "error" | "success" | "default";
-    hide?: boolean;
+    type?: string;
     regex?: RegExp;
     control?: any;
     onChange?: onChangeFunc

@@ -14,7 +14,9 @@ export function CreateModal({modalRef, addRow}:{modalRef: RefObject<ModalFunctio
     const { control, handleSubmit, reset } = useForm<UserData>();
 
     async function submit(data: UserData) {
-        const res = await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+"/users", data);
+        const res = await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+"/users", data, {
+            withCredentials: true
+        });
         if (!res?.data ){
             toast.error("Não foi possível criar usuário!");
             console.error(res)
@@ -31,7 +33,7 @@ export function CreateModal({modalRef, addRow}:{modalRef: RefObject<ModalFunctio
                 <TextInput label="Nome" name="name" control={control}  required />
                 <TextInput label="Idade" name="age" control={control} required />
                 <TextInput label="Email" name="email" control={control} required />
-                <TextInput label="Avatar" name="avatar" control={control} required />
+                <TextInput label="password" name="password" control={control} required type="password" />
                 <Button>
                     Criar
                 </Button>

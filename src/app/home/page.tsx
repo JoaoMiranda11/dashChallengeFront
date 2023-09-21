@@ -44,8 +44,8 @@ export default function Home() {
         maxWidth: 200,
       }
     },
-    "avatar": {
-      name: "Avatar",
+    "password": {
+      name: "password",
       style: {
         maxWidth: 100,
       }
@@ -102,7 +102,9 @@ export default function Home() {
 
   useEffect(() => {
     (async () => {
-      const res = await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+"/users");
+      const res = await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+"/users", {
+        withCredentials: true
+      });
       if (res?.data && Array.isArray(res.data)) {
         tableRef.current?.setTableData(res.data);
       }

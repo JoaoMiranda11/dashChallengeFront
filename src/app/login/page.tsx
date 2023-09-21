@@ -32,7 +32,7 @@ export default function Login() {
                 </div>
                 <form className={styles.form} onSubmit={handleSubmit(submit)}>
                     <TextInput control={control} name="username" label="Username" required regex={/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/} />
-                    <TextInput control={control} name="password" label="Password" hide required />
+                    <TextInput control={control} name="password" label="Password" type="password" required />
                     <div className="flex items-center justify-center">
                         <Button type="submit" loading={loading}>
                             Sign In

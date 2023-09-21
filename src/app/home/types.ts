@@ -2,6 +2,6 @@ export type UserData = {
     name: string,
     age: number,
     email: string,
-    avatar: string,
+    password: string,
     _id: number
 }

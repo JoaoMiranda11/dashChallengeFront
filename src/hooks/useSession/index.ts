@@ -16,7 +16,9 @@ export function useSession() {
     const session = useAppSelector((state) => state.session)
 
     const refresh = useCallback(async () => {
-        const res = await axios.get(BASE_NEXT_URL+"/api/auth/session");
+        const res = await axios.get(BASE_NEXT_URL+"/api/auth/session", {
+            withCredentials: true
+        });
         if (res.status === 200 && res.data) {
             dispatch(sessionActions.setSession({
                 data: res.data.data as UserData,
@@ -31,7 +33,9 @@ export function useSession() {
     }, [dispatch])
 
     const singIn = useCallback(async (data: {username: string, password: string}) => {
-        const res = await axios.post(BASE_NEXT_URL+"/api/auth/login", data);
+        const res = await axios.post(BASE_NEXT_URL+"/api/auth/login", data, {
+            withCredentials: true
+        });
         if (res?.data?.success) {
             await refresh();
             router.push("/")
@@ -41,7 +45,9 @@ export function useSession() {
     }, [refresh, router])
 
     const logOut = useCallback(async () => {
-        const res = await axios.delete(BASE_NEXT_URL+"/api/auth/session");
+        const res = await axios.delete(BASE_NEXT_URL+"/api/auth/session", {
+            withCredentials: true
+        });
         dispatch(sessionActions.setSession({
             data: null,
             status: "unauthenticated"

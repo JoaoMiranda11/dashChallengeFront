@@ -15,7 +15,9 @@ function EditForm({changeRow}:{changeRow: (index: number, data: any) => void}) {
 
     const submit = useCallback(async (formData: UserData) => {
         if (data !== null && data?.index !== undefined) {
-            const res = await axios.patch(process.env.NEXT_PUBLIC_BACKEND_URL+"/users", {...formData, id: data._id});
+            const res = await axios.patch(process.env.NEXT_PUBLIC_BACKEND_URL+"/users", {...formData, id: data._id}, {
+                withCredentials: true
+            });
             if (!res?.data){
                 toast.error("Não foi possível criar usuário!");
                 console.error(res)
@@ -40,7 +42,7 @@ function EditForm({changeRow}:{changeRow: (index: number, data: any) => void}) {
             <TextInput label="name" name="name" control={control} defaultValue={data?.name} required />
             <TextInput label="age" name="age" control={control} defaultValue={`${data?.age}`} required />
             <TextInput label="email" name="email" control={control} defaultValue={`${data?.email}`} required />
-            <TextInput label="avatar" name="avatar" control={control} defaultValue={data?.avatar} required />
+            <TextInput label="password" type="password" name="password" control={control} defaultValue={data?.password} required />
             <Button>
                 Editar
             </Button>
